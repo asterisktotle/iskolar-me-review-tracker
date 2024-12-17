@@ -20,10 +20,15 @@ export default function HomeScreen({navigation}) {
       <Image source={require("../assets/rocket.png")} style={styles.rocketImage} />
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.signUpBtnContainer} 
-          onPress={handleSignUp} activeOpacity={0.7}>
-          <Text style={styles.signUp}>SIGN UP WITH GOOGLE</Text>
-          </TouchableOpacity>
+        <TouchableOpacity 
+          style={styles.signUpBtnContainer} 
+          onPress={handleSignUp} 
+          activeOpacity={0.7}>
+            <Text 
+              style={styles.signUp}>
+                SIGN UP WITH GOOGLE
+            </Text>
+        </TouchableOpacity>
 
         <TouchableOpacity style={styles.signInLink} activeOpacity={0.7}
         onPress={handleSignIn}>
@@ -82,8 +87,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingInline: 70,
     borderRadius: 20,
-    paddingBlock: 15, 
-    
+    paddingBlock: 15,  
   },
   signUp: {
     fontSize: 18,

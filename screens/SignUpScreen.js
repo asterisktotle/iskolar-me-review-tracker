@@ -2,10 +2,12 @@ import React from 'react';
 import { StyleSheet, View, Text, SafeAreaView } from 'react-native';
 import {colors} from "../utility/colors";
 import {fonts} from "../utility/fonts";
+import BackButton from '../utility/backButton';
 
 export default function SignUpScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
+      <BackButton/>
       <Text style={styles.title}>Sign Up</Text>
       {/* Add your sign up form components here */}
     </SafeAreaView>
