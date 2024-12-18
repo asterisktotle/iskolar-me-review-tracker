@@ -17,8 +17,9 @@ export default function SignInScreen({ navigation }) {
       {/* <Image source={require("../assets/moon.png")} style={styles.moonImage} /> */}
 
       <View style={styles.contentWrapper}>
-        <Text style={styles.title}>SIGN IN</Text>
+   
         <View style={styles.formWrapper}>
+          <Text style={styles.title}>Hey, Welcome back!</Text>
           <View style={styles.usernameContainer}>
             <Ionicons 
               name={"person"} 
@@ -40,14 +41,14 @@ export default function SignInScreen({ navigation }) {
             />
             <TextInput 
               style={styles.password}
-              placeholder='Password'
+              placeholder={'Password'}
               placeholderTextColor={'#73AFCC'}
               secureTextEntry={secureTextEntry}/>
             
             <TouchableOpacity
               onPress={ () => {setSecureEntry((prev) => !prev)}} >
               <Ionicons 
-              name={"eye-off-outline"} 
+              name={ secureTextEntry ? "eye-off-outline" : "eye-outline"} 
               size={20}
               color={"#C0C9CE"}  
               />
@@ -108,21 +109,20 @@ const styles = StyleSheet.create({
   },
 
   contentWrapper: {
-    flex: 1,
     alignItems: 'center',
-    paddingTop: 60,
+    paddingTop: 90,
     width: '100%',
   },
 
   title: {
-    fontSize: 24,
+    fontSize: 28,
     color: colors.white,
     fontFamily: fonts.Bold,
-    marginBottom: 10,
   },
 
   formWrapper: {
-    width: 330,
+    width: '100%',
+    paddingInline: 18,
     gap: 20,
   },
   usernameContainer: inputContainerStyle,
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   },
 
   signInBtnContainer: {
-    backgroundColor: colors.lightBlueBtn, 
+    backgroundColor: colors.lightBlueGlass, 
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 10,
@@ -154,7 +154,4 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
 
-  // moonImage: {
-  //   position: 'absolute',
-  // }
 });
