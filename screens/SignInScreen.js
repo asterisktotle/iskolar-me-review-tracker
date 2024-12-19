@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { StyleSheet, View, Text, SafeAreaView, Image, TextInput, TouchableOpacity} from 'react-native';
+import { StyleSheet, View, Text, SafeAreaView, Image, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform} from 'react-native';
 import { colors } from "../utility/colors";
 import { fonts } from "../utility/fonts";
 import BackButton from '../utility/backButton';
@@ -14,7 +14,12 @@ export default function SignInScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <BackButton />
 
-      {/* <Image source={require("../assets/moon.png")} style={styles.moonImage} /> */}
+     <View styles={styles.imagesContainer}>
+      <KeyboardAvoidingView>
+           <Image source={require("../assets/saturn.png")} style={styles.saturnImage} />
+           <Image source={require("../assets/welcome-astronaut.png")} style={styles.welcomeAstronaut} />
+        </KeyboardAvoidingView>
+     </View>
 
       <View style={styles.contentWrapper}>
    
@@ -56,14 +61,10 @@ export default function SignInScreen({ navigation }) {
 
           </View>       
 
-          <Text style={styles.questionText}>
-            Don't have an account? { }
-            <Text
-              style={styles.signUpLink} 
-              onPress={() => navigation.navigate('SignUp')} >
-                SIGN UP
-            </Text>
-          </Text>
+          <TouchableOpacity activeOpacity={0.5}>
+            <Text  style={styles.forgetPasswordText} >Forgot password? </Text> 
+          </TouchableOpacity>
+         
 
           <TouchableOpacity 
             style={styles.signInBtnContainer} 
@@ -129,16 +130,13 @@ const styles = StyleSheet.create({
   passwordContainer: inputContainerStyle,
   username: textInputStyle,
   password: textInputStyle,
+
   
-  questionText: {
+  forgetPasswordText: {
+    fontSize: 16,
+    fontFamily: fonts.Regular,
     color: colors.white,
-    fontFamily: fonts.Regular,
-    fontSize: 16,
-  },
-  signUpLink: {
-    color: colors.hyperlinkClr,
-    fontFamily: fonts.Regular,
-    fontSize: 16,
+    textAlign:'right'
   },
 
   signInBtnContainer: {
@@ -153,5 +151,23 @@ const styles = StyleSheet.create({
     fontFamily: fonts.SemiBold,
     fontSize: 20,
   },
+  saturnImage: {
+    position: 'absolute',
+    resizeMode:"contain",
+    height: 150,
+    width: 140,
+    right: 0,
+    top: -60,
+  },
+
+  welcomeAstronaut: {
+    position: 'absolute',
+    resizeMode:"contain",
+    height: 300,
+    width: 500,
+    bottom: -670,
+    right: -160,
+  },
+
 
 });

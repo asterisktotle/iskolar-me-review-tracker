@@ -13,7 +13,7 @@ export default function SignUpScreen({ navigation }) {
   const [password, setPassword] = useState ("");
   const [confirmPassword, setConfirmPassword] = useState ("");
   const [errorMessage, setErrorMessage] = useState ("");
-
+  
   const handlePasswordMatch = () => {
     if (password !== confirmPassword) {
       setErrorMessage ('Passwords do not match');
@@ -28,12 +28,12 @@ export default function SignUpScreen({ navigation }) {
       
       <View style={styles.contentWrapper}>
         <View style={styles.formWrapper}>
-          <Text style={styles.title}>WELCOME!</Text>
-          <Text style={styles.title}>Create an account to join us</Text>
+      
+          <Text style={styles.title}>Create an account to join us!</Text>
       
           <View style={styles.emailContainer}>
             <Ionicons 
-              name={"person"} 
+              name={"mail"} 
               size={24}
               color={colors.white}
             />
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 24,
+    fontSize: 22,
     color: colors.white,
     fontFamily: fonts.SemiBold,
   },
