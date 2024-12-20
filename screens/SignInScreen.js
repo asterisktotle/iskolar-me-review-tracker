@@ -1,17 +1,54 @@
-import React, {useState} from 'react';
-import { StyleSheet, View, Text, SafeAreaView, Image, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import { StyleSheet, View, Text, SafeAreaView, Image, TextInput, TouchableOpacity,  KeyboardAvoidingView, ActivityIndicator, Alert} from 'react-native';
 import { colors } from "../utility/colors";
 import { fonts } from "../utility/fonts";
 import BackButton from '../utility/backButton';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { FIREBASE_AUTH } from '../firebaseConfig';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+
 
 
 export default function SignInScreen({ navigation }) {
     const [secureTextEntry, setSecureEntry] = useState (true);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState ('');
+    const [error, setError] = useState ('FAILED');
+    const [loading, setLoading] = useState (false);
+    const auth = FIREBASE_AUTH;
+
+
+    // //check if user is already signed in
+    // useEffect (() => {
+    //   const unsubscribe = auth().onAuthStateChanged (user => {
+    //     if (user) {
+    //       navigation.replace("Home"); //go to the home screen immediately 
+    //     } }
+    //   );
+    //     return unsubscribe;
+    // }, [] )
+
+
+    const handleSignIn = async () => {
+      setLoading (true);
+      try {
+        const response = await signInWithEmailAndPassword(auth,email,password);
+        console.log("Signed in successfully", response);
+        navigation.replace('AppHome');
+      } catch (error) {
+        console.log(error);
+        Alert.alert ('Gay alert!',"You smells like gay. Admit it and try again.", [
+          {text:"I'm gay" }
+        ] )
+      } finally {
+        setLoading(false);
+      }
+    }
 
   return (
     <SafeAreaView style={styles.container}>
+    <KeyboardAvoidingView behavior='padding'>
       <BackButton />
 
      <View styles={styles.imagesContainer}>
@@ -24,7 +61,7 @@ export default function SignInScreen({ navigation }) {
       <View style={styles.contentWrapper}>
    
         <View style={styles.formWrapper}>
-          <Text style={styles.title}>Hey, Welcome back!</Text>
+          <Text style={styles.title}>Hey Welcome back!</Text>
           <View style={styles.usernameContainer}>
             <Ionicons 
               name={"person"} 
@@ -33,8 +70,14 @@ export default function SignInScreen({ navigation }) {
             />
             <TextInput 
               style={styles.username}
-              placeholder='Username'
+              value={email}
+              onChangeText={setEmail}
+              placeholder='email'
+              keyboardType='email-address'
+              autoComplete='email'
               placeholderTextColor={'#73AFCC'}
+              autoCapitalize='none'
+          
             />
           </View>
           
@@ -46,10 +89,19 @@ export default function SignInScreen({ navigation }) {
             />
             <TextInput 
               style={styles.password}
+              value={password}
+              onChangeText={setPassword}
               placeholder={'Password'}
+              autoComplete='password'
+              maxLength={16}
+           
+              
+              
               placeholderTextColor={'#73AFCC'}
-              secureTextEntry={secureTextEntry}/>
-            
+              secureTextEntry={secureTextEntry}
+            />
+
+          
             <TouchableOpacity
               onPress={ () => {setSecureEntry((prev) => !prev)}} >
               <Ionicons 
@@ -59,6 +111,8 @@ export default function SignInScreen({ navigation }) {
               />
             </TouchableOpacity>
 
+           
+
           </View>       
 
           <TouchableOpacity activeOpacity={0.5}>
@@ -66,19 +120,25 @@ export default function SignInScreen({ navigation }) {
           </TouchableOpacity>
          
 
-          <TouchableOpacity 
-            style={styles.signInBtnContainer} 
-            onPress={console.log('signing in...')} 
-            activeOpacity={0.7}>
-            <Text 
-              style={styles.signIn}>
+          { loading ? <ActivityIndicator size='large' color='white' /> 
+          : <TouchableOpacity 
+              style={styles.signInBtnContainer} 
+              activeOpacity={0.7}
+              onPress={handleSignIn}>
+              <Text 
+                style={styles.signIn}>
                 SIGN IN
-            </Text>
-          </TouchableOpacity>
+              </Text>
+            </TouchableOpacity> }
+
+
+         
 
         </View>
 
       </View>
+
+    </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

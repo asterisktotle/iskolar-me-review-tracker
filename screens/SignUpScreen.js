@@ -1,31 +1,92 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, SafeAreaView, TextInput, Image, TouchableOpacity} from 'react-native';
+import { Alert,StyleSheet, View, Text, SafeAreaView, TextInput, Image, TouchableOpacity, ActivityIndicator} from 'react-native';
 import {colors} from "../utility/colors";
 import {fonts} from "../utility/fonts";
 import BackButton from '../utility/backButton';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { FIREBASE_AUTH } from '../firebaseConfig';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { KeyboardAvoidingView } from 'react-native';
+
+
 
 
 export default function SignUpScreen({ navigation }) {
   const [secureTextEntry, setSecureEntry] = useState (true); 
   const [secureConfirmPass, setSecureConfirmPass] = useState (true); 
-
-  const [password, setPassword] = useState ("");
-  const [confirmPassword, setConfirmPassword] = useState ("");
-  const [errorMessage, setErrorMessage] = useState ("");
+  
+  const [loading, setLoading] = useState (false);
+  const [password, setPassword] = useState ('');
+  const [confirmPassword, setConfirmPassword] = useState ('');
+  const [errorMessage, setErrorMessage] = useState ();
+  const [username, setUsername] = useState();
+  const [email, setEmail] = useState ('');
+  const auth = FIREBASE_AUTH;
   
   const handlePasswordMatch = () => {
     if (password !== confirmPassword) {
       setErrorMessage ('Passwords do not match');
+      return;
     } else {
       setErrorMessage ('');
+      handleSignUp();
     }
   }
   
+  const handleSignUp = async () => {
+
+    //validate the input
+    if (!email || !password){
+      alert ('Please fill in all the fields')
+      return;
+    }
+    //email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)){
+      alert('Please enter a valid email address');
+      return;
+    }
+    //password must be at minimum of 6 characters
+    if(password.length < 6){
+      alert('Password should be at least 6 characters long')
+      return;
+    }
+
+    //set the loading screen for waiting
+    setLoading(true);
+    try {
+      const userCredential = await createUserWithEmailAndPassword (auth,email,password);
+      console.log('User registered successfully:', userCredential.user);
+      navigation.replace('AppHome');
+
+    } catch (error) {
+      let errorMessage = 'Registration failed';
+      switch (error.code) {
+        case 'auth/email-already-in-use': 
+          errorMessage = 'This email is already registered';
+          break;
+        case 'auth/invalid':
+          errorMessage = 'Invalid email address';
+          break;
+        case 'auth/operation-not-allowed':
+          errorMessage = 'Email/password accounts are not enabled';
+          break;
+        default: 
+          errorMessage = error.message;
+      }
+      alert('Sign up failed' + error.message);
+    } finally {
+      setLoading(false);
+    }
+
+  }
+
+  
   return (
     <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView behavior='padding'>
       <BackButton/>
-      
+
       <View style={styles.contentWrapper}>
         <View style={styles.formWrapper}>
       
@@ -39,20 +100,12 @@ export default function SignUpScreen({ navigation }) {
             />
             <TextInput 
                style={styles.email}
+               value={email}
+               onChangeText={setEmail}
+               keyboardType='email-address'
+               autoComplete='email'
                placeholder='Email'
-               placeholderTextColor={'#73AFCC'}
-            />
-          </View>
-
-          <View style={styles.usernameContainer}>
-            <Ionicons 
-              name={"person"} 
-              size={24}
-              color={colors.white}
-            />
-            <TextInput 
-               style={styles.username}
-               placeholder='Username'
+               autoCapitalize='none'
                placeholderTextColor={'#73AFCC'}
             />
           </View>
@@ -65,11 +118,14 @@ export default function SignUpScreen({ navigation }) {
             />
             <TextInput 
                style={styles.password}
-               placeholder='Enter password'
-               placeholderTextColor={'#73AFCC'}
                secureTextEntry = {secureTextEntry}
+               value={password}
                onChangeText = {setPassword} //updates the password state
-            />
+               autoComplete='password'
+               placeholder='Enter password'
+               maxLength={16}
+               placeholderTextColor={'#73AFCC'}
+               />
             <TouchableOpacity
               onPress={ () => {setSecureEntry((prev) => !prev)}} >
               <Ionicons 
@@ -88,11 +144,13 @@ export default function SignUpScreen({ navigation }) {
             />
             <TextInput 
                style={styles.password}
-               placeholder='Confirm password'
-               placeholderTextColor={'#73AFCC'}
-               secureTextEntry = {secureConfirmPass}
+               value={confirmPassword}
                onChangeText={setConfirmPassword}
-            />
+               secureTextEntry = {secureConfirmPass}
+               placeholder='Confirm password'
+               maxLength={16}
+               placeholderTextColor={'#73AFCC'}
+               />
             {confirmPassword ? <Text style={styles.errorText}> {errorMessage}</Text> : null}
             <TouchableOpacity
               onPress={() => setSecureConfirmPass ( (prev) => !prev )}
@@ -105,11 +163,14 @@ export default function SignUpScreen({ navigation }) {
             </TouchableOpacity>
           </View>
           
+        {loading ? <ActivityIndicator size='large' color='white'/> : 
+
           <TouchableOpacity style={styles.submitBtn} activeOpacity={0.9} onPress={handlePasswordMatch} > 
             <Text style={styles.submitText} >
               SUBMIT
             </Text>
           </TouchableOpacity>
+          }
 
           <Text style={styles.questionText}>
               Already have an account? { }
@@ -122,6 +183,8 @@ export default function SignUpScreen({ navigation }) {
               </Text>
         </View>
       </View>
+
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -143,8 +206,6 @@ const textInputStyle = {
   flex: 1,
   paddingHorizontal: 10,
 }
-
-
 
 const styles = StyleSheet.create({
   container: {
@@ -170,8 +231,8 @@ const styles = StyleSheet.create({
 
   emailContainer: inputContainerStyle,
   email: textInputStyle,
-  usernameContainer: inputContainerStyle,
-  username: textInputStyle,
+  // usernameContainer: inputContainerStyle,
+  // username: textInputStyle,
   passwordContainer: inputContainerStyle,
   password: textInputStyle,
 
