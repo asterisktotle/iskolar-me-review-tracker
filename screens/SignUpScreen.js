@@ -19,7 +19,6 @@ export default function SignUpScreen({ navigation }) {
   const [password, setPassword] = useState ('');
   const [confirmPassword, setConfirmPassword] = useState ('');
   const [errorMessage, setErrorMessage] = useState ();
-  const [username, setUsername] = useState();
   const [email, setEmail] = useState ('');
   const auth = FIREBASE_AUTH;
   

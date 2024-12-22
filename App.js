@@ -1,13 +1,13 @@
 import React from "react";
 import { useState, useEffect } from "react";
-
+import { colors } from "./utility/colors";
 import { NavigationContainer } from "@react-navigation/native";
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
-
 import HomeScreen from './screens/HomeScreen'
 import SignInScreen from './screens/SignInScreen'
 import SignUpScreen from "./screens/SignUpScreen";
 import AppHome from "./screens/AppHome";
+
 import { onAuthStateChanged } from "firebase/auth";
 import {FIREBASE_AUTH } from "./firebaseConfig";
 
@@ -39,8 +39,9 @@ export default function App() {
           },
           headerTintColor: '#fff',
         }}
+        
+        
       >
-    
         <Stack.Screen 
           name="Home" 
           component={HomeScreen} 
@@ -61,6 +62,8 @@ export default function App() {
           component={AppHome} 
           options={{ headerShown: false }}
         />
+
+
       </Stack.Navigator>
     </NavigationContainer>
   )

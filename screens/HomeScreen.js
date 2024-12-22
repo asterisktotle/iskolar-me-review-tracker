@@ -2,7 +2,6 @@ import React from 'react';
 import { StyleSheet, Text, Image, View, SafeAreaView, Platform, StatusBar, TouchableOpacity} from 'react-native';
 import {colors} from "../utility/colors"
 import {fonts} from "../utility/fonts"
-import { FIREBASE_AUTH } from '../firebaseConfig';
 
 export default function HomeScreen({navigation}) {
 
