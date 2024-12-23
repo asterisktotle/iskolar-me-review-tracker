@@ -1,16 +1,12 @@
-import React from "react";
-import { useState, useEffect } from "react";
-import { colors } from "./utility/colors";
+import React, { useState, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import {createNativeStackNavigator} from '@react-navigation/native-stack'
-import HomeScreen from './screens/HomeScreen'
-import SignInScreen from './screens/SignInScreen'
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import HomeScreen from './screens/HomeScreen';
+import SignInScreen from './screens/SignInScreen';
 import SignUpScreen from "./screens/SignUpScreen";
 import AppHome from "./screens/AppHome";
-
 import { onAuthStateChanged } from "firebase/auth";
-import {FIREBASE_AUTH } from "./firebaseConfig";
-
+import { FIREBASE_AUTH } from "./firebaseConfig";
 
 const Stack = createNativeStackNavigator();
 
@@ -18,7 +14,7 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [initializing, setInitializing] = useState(true);
   
-  useEffect (() => {
+  useEffect(() => {
     const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user) => {
       setUser(user);
       if (initializing) setInitializing(false);
@@ -30,41 +26,26 @@ export default function App() {
   if (initializing) return null;
   
   return (
-    <NavigationContainer>
-      <Stack.Navigator 
-        initialRouteName={user ? "AppHome" : "Home"}
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: 'black',
-          },
-          headerTintColor: '#fff',
-        }}
-        
-        
-      >
-        <Stack.Screen 
-          name="Home" 
-          component={HomeScreen} 
-          options={{ headerShown: false }}    
-        />
-        <Stack.Screen 
-          name="SignUp" 
-          component={SignUpScreen} 
-          options={{ headerShown: false}}
-        />
-        <Stack.Screen 
-          name="SignIn" 
-          component={SignInScreen} 
-          options={{ headerShown: false }}
-        />
-       <Stack.Screen 
-          name="AppHome" 
-          component={AppHome} 
-          options={{ headerShown: false }}
-        />
+    <NavigationContainer> 
+  <Stack.Navigator screenOptions={{headerShown: false}}>
+    {!user ? (
+      //Non-authenticated stack
+      <>
+      <Stack.Screen name="HomeScreen" component={HomeScreen}/>
+      <Stack.Screen name="SignIn" component={SignInScreen}/>
+      <Stack.Screen name="SignUp" component={SignUpScreen}/>
+      </>
+    ):
+    //Authenticated stack
+    <>
+    <Stack.Screen name="AppHome" component={AppHome}/>
+    <Stack.Screen name="Home" component={HomeScreen}/>
+    </>
+    }
 
-
-      </Stack.Navigator>
-    </NavigationContainer>
-  )
+  </Stack.Navigator>
+</NavigationContainer>
+  );
 }
+
+

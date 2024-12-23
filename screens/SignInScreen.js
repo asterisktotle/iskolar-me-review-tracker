@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import { StyleSheet, View, Text, SafeAreaView, Image, TextInput, TouchableOpacity,  KeyboardAvoidingView, ActivityIndicator, Alert} from 'react-native';
 import { colors } from "../utility/colors";
 import { fonts } from "../utility/fonts";
@@ -18,27 +18,15 @@ export default function SignInScreen({ navigation }) {
     const [loading, setLoading] = useState (false);
     const auth = FIREBASE_AUTH;
 
-
-    // //check if user is already signed in
-    // useEffect (() => {
-    //   const unsubscribe = auth().onAuthStateChanged (user => {
-    //     if (user) {
-    //       navigation.replace("Home"); //go to the home screen immediately 
-    //     } }
-    //   );
-    //     return unsubscribe;
-    // }, [] )
-
-
     const handleSignIn = async () => {
       setLoading (true);
       try {
         const response = await signInWithEmailAndPassword(auth,email,password);
         console.log("Signed in successfully", response);
-        navigation.replace('AppHome');
+      
       } catch (error) {
         console.log(error);
-        Alert.alert ('Gay alert!',"You smells like gay. Admit it and try again.", [
+        Alert.alert ('Gay alert!',"You smell like gay. Admit it and try again.", [
           {text:"I'm gay" }
         ] )
       } finally {
